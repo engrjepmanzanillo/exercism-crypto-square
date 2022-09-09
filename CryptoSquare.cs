@@ -8,9 +8,9 @@ public static class CryptoSquare
         string normalizedPlainText = "";
         foreach (char letter in plaintext)
         {
-            if(!char.IsPunctuation(letter))
+            if(char.IsLetterOrDigit(letter))
             {
-                normalizedPlainText += String.Join("", letter);
+                normalizedPlainText += letter;
             }
         }
         return normalizedPlainText.ToLower();
@@ -41,20 +41,35 @@ public static class CryptoSquare
 
     public static string Encoded(string plaintext)
     {
-        string[] textArray = {};
+        List<string> textList = new List<string>();
+        List<char> charList = new List<char>();
         IEnumerable<string> plaintextSegments = PlaintextSegments(plaintext);
-        int row = 1;
+        int col = 1;
         foreach (var text in plaintextSegments)
         {
-            row++;
+            textList.Add(text);
+            col++;
         }
-
-        
-        
-    
+        string[] textArray = textList.ToArray();
+        int row = textArray[0].Length;
+        char[,] charArray = new char[row,col];
+        for (int c = 0; c < col; c++)
+        {
+            foreach (char text in textArray[c])
+            {
+                for (int i = 0; i < row; i++)
+                {
+                    charArray[i,c] = text;
+                }
+            }
+        }
+        return String.Join("",charArray);
     }
 
 
-    public static string Ciphertext(string plaintext) => String.Join(" ",Encoded(plaintext));
+    public static string Ciphertext(string plaintext) 
+    {
+        return Encoded(plaintext);
+    }
 
 }
