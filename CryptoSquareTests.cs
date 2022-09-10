@@ -57,4 +57,6 @@ public class CryptoSquareTests
         var expected = "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn  sseoau ";
         Assert.Equal(expected, CryptoSquare.Ciphertext(plaintext));
     }
+
+    
 }
