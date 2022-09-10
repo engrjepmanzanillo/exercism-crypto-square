@@ -2,78 +2,68 @@ using System;
 using System.Collections.Generic;
 
 public static class CryptoSquare
-{
+{  
     public static string NormalizedPlaintext(string plaintext)
     {
         string normalizedPlainText = "";
         foreach (char letter in plaintext)
         {
-            if(char.IsLetterOrDigit(letter))
+            if (char.IsLetterOrDigit(letter))
             {
                 normalizedPlainText += letter;
             }
         }
         return normalizedPlainText.ToLower();
-        
     }
 
     public static IEnumerable<string> PlaintextSegments(string plaintext)
     {
-        List<string> plaintextSegments = new List<string>();
         string normalizedPlainText = NormalizedPlaintext(plaintext);
         int textLength = normalizedPlainText.Length;
         int col = Convert.ToInt32(Math.Ceiling(Math.Sqrt(textLength)));
         int row = Convert.ToInt32(Math.Floor(Math.Sqrt(textLength)));
         int addSpace = (col * row) - textLength;
+        string[] plaintextSegments = new string[row];
         if (addSpace > 0)
         {
             for (int i = 0; i < addSpace; i++)
             {
                 normalizedPlainText += " ";
             }
-            if (row * col >= textLength && col >= row)
-            {
-                for (int i = 0; i < col; i++)
-                {
-                    plaintextSegments.Add(normalizedPlainText.Substring((i * row), col));
-                }
-            }
+        }
+        for (int i = 0; i < row; i++)
+        {
+            plaintextSegments[i] = normalizedPlainText.Substring((i * col), col);
         }
         return plaintextSegments;
     }
 
     public static string Encoded(string plaintext)
     {
-        List<string> textList = new List<string>();
-        List<char> charList = new List<char>();
-        IEnumerable<string> plaintextSegments = PlaintextSegments(plaintext);
-        int col = 0;
-        foreach (var text in plaintextSegments)
+        IEnumerator<string> plainTextSegment = PlaintextSegments(plaintext).GetEnumerator();
+        List<string> plainTextList = new List<string>();
+        while (plainTextSegment.MoveNext())
         {
-            textList.Add(text);
-            col++;
+            plainTextList.Add(plainTextSegment.Current);
         }
-        string[] textArray = textList.ToArray();
-        int row = textArray[0].Length;
-        string encodedText = "";
-        int index = 0;
-        for (int r = 0; r < col; r++)
+        string[] textSegments = plainTextList.ToArray();
+        string encoded = "";
+        int col = textSegments.Length;
+        int row = textSegments[0].Length;
+        for (int c = 0; c < col + 1; c++)
         {
-            for (int c = r; c < row; c++)
+            for (int r = 0; r < row - 1; r++)
             {
-                encodedText += textArray[r][c].ToString();
-                index++;
+                encoded += textSegments[r][c];
+            }
+            if(c < col)
+            {
+                encoded += " ";
             }
         }
-        return encodedText;
-
-        
+        return encoded;
     }
 
-
-    public static string Ciphertext(string plaintext) 
-    {
-                return Encoded(plaintext);
-    }
+    public static string Ciphertext(string plaintext) => Encoded(plaintext);
 
 }
