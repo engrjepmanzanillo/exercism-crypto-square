@@ -22,6 +22,11 @@ public static class CryptoSquare
         int textLength = normalizedPlainText.Length;
         int col = Convert.ToInt32(Math.Ceiling(Math.Sqrt(textLength)));
         int row = Convert.ToInt32(Math.Floor(Math.Sqrt(textLength)));
+        //check if the rectangle is less than perfect square of col
+        if((col * row) < textLength)
+        {
+            row = row + 1;
+        }
         int addSpace = (col * row) - textLength;
         string[] plaintextSegments = new string[row];
         if (addSpace > 0)
@@ -50,13 +55,13 @@ public static class CryptoSquare
         string encoded = "";
         int col = textSegments.Length;
         int row = textSegments[0].Length;
-        for (int c = 0; c < col + 1; c++)
+        for (int c = 0; c < row; c++)
         {
-            for (int r = 0; r < row - 1; r++)
+            for (int r = 0; r < col; r++)
             {
                 encoded += textSegments[r][c];
             }
-            if(c < col)
+            if (c < row - 1 )
             {
                 encoded += " ";
             }
@@ -64,6 +69,11 @@ public static class CryptoSquare
         return encoded;
     }
 
-    public static string Ciphertext(string plaintext) => Encoded(plaintext);
+    public static string Ciphertext(string plaintext)
+    {
+        if(plaintext.Length > 0)
+            return Encoded(plaintext);
+        return "";
+    }
 
 }

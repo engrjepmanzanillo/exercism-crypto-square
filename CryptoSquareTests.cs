@@ -2,7 +2,7 @@ using Xunit;
 
 public class CryptoSquareTests
 {
-    /*
+    
     [Fact]
     public void Empty_plaintext_results_in_an_empty_ciphertext()
     {
@@ -50,7 +50,7 @@ public class CryptoSquareTests
         var expected = "clu hlt io ";
         Assert.Equal(expected, CryptoSquare.Ciphertext(plaintext));
     }
-*/
+
     [Fact()]
     public void Number_54_character_plaintext_results_in_7_chunks_the_last_two_with_trailing_spaces()
     {
